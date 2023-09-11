@@ -28,9 +28,9 @@ public:
 		return false;
 	}
 
-	bool FillSquare(int x, int y, Colour p)
+	bool FillSquare(int column, int row, Colour p)
 	{
-		values[x][y] = p;
+		values[column][row] = p;
 	}
 
 	char** GetCharsToRender()

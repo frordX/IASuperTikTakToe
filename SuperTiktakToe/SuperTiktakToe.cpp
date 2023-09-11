@@ -3,10 +3,12 @@
 
 #include <iostream>
 #include "Board.h"
+#include "PlayerInput.h"
 
 class Game
 {
     Board board;
+    PlayerInput playerInput;
 
     void ProcessTurnForPlayer(Colour player)
     {
@@ -14,6 +16,9 @@ class Game
         std::cout << "Select an empty square: " << std::endl;
 
         RenderBoard();
+
+        auto userInput = playerInput.GetPlayerInput(X);
+        board.FillSquare(userInput.column, userInput.row, X);
     }
 
     // To improve for nine boards

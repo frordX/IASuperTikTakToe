@@ -132,6 +132,7 @@
   <ItemGroup>
     <ClInclude Include="Board.h" />
     <ClInclude Include="Enums.h" />
+    <ClInclude Include="PlayerInput.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
