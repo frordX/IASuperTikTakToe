@@ -7,7 +7,7 @@ enum Colour
 };
 
 const char ColourToString[3] = {
-' ',
 'X',
-'O',
+'0',
+' ',
 };

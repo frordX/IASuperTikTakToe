@@ -17,8 +17,12 @@ class Game
 
         RenderBoard();
 
-        auto userInput = playerInput.GetPlayerInput(X);
-        board.FillSquare(userInput.column, userInput.row, X);
+        auto userInput = playerInput.GetPlayerInput(player);
+        while (!board.FillSquare(userInput.column, userInput.row, player))
+        {
+            std::cout << "The selected square must be empty!" << std::endl;
+            userInput = playerInput.GetPlayerInput(player);
+        }
     }
 
     // To improve for nine boards
@@ -46,7 +50,7 @@ class Game
                 if (j < 2) std::cout << ' ';
             }
 
-            if (i < 2) std::cout << std::endl;
+            std::cout << std::endl;
         }
     }
 
@@ -55,6 +59,17 @@ public:
     void ProcessTurn()
     {
         ProcessTurnForPlayer(X);
+        ProcessTurnForPlayer(O);
+    }
+
+    Colour GetWinner()
+    {
+        return board.EvaluateSolved();
+    }
+
+    bool GetFinished()
+    {
+        return GetWinner() != Blank || board.IsFull();
     }
 };
 
@@ -62,6 +77,11 @@ int main()
 {
     std::cout << "Welcome to Tic tac toe!\n";
     Game game;
-    game.ProcessTurn();
+    while (!game.GetFinished())
+    {
+        game.ProcessTurn();
+    }
+
+    std::cout << "Fininished Game. Winner: "<< game.GetWinner() << std::endl;
 }
 

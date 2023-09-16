@@ -5,7 +5,7 @@ class Board
 {
 	Colour values[3][3] = { {Blank, Blank, Blank}, {Blank, Blank, Blank}, {Blank, Blank, Blank} };
 public:
-	bool EvaluateSolved(Colour p)
+	bool EvaluateSolvedForColour(Colour p)
 	{
 		if (p == Blank) throw;
 		int counterDig1 = 3, counterDig2 = 3;
@@ -28,9 +28,36 @@ public:
 		return false;
 	}
 
+	Colour EvaluateSolved()
+	{
+		if (EvaluateSolvedForColour(O)) return O;
+		if (EvaluateSolvedForColour(X)) return X;
+		return Blank;
+	}
+
+	bool IsFull()
+	{
+		int bCounter = 0;
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				if (values[i][j] != Blank) bCounter++;
+			}
+		}
+
+		return bCounter == 9;
+	}
+
 	bool FillSquare(int column, int row, Colour p)
 	{
-		values[column][row] = p;
+		if (values[column][row] == Blank && p != Blank)
+		{
+			values[column][row] = p;
+			return true;
+		}
+
+		return false;
 	}
 
 	char** GetCharsToRender()
