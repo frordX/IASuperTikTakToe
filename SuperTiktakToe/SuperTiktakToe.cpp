@@ -25,7 +25,9 @@ class Game
         }
     }
 
-    // To improve for nine boards
+public:
+
+    // Todo: improve for nine boards
     void RenderBoard()
     {
         auto chars = board.GetCharsToRender();
@@ -54,12 +56,17 @@ class Game
         }
     }
 
-public:
-
     void ProcessTurn()
     {
-        ProcessTurnForPlayer(X);
-        ProcessTurnForPlayer(O);
+        if (!GetFinished())
+        {
+            ProcessTurnForPlayer(X);
+        }
+
+        if (!GetFinished())
+        {
+            ProcessTurnForPlayer(O);
+        }
     }
 
     Colour GetWinner()
@@ -82,6 +89,7 @@ int main()
         game.ProcessTurn();
     }
 
-    std::cout << "Fininished Game. Winner: "<< game.GetWinner() << std::endl;
+    std::cout << "Fininished Game. Winner: "<< ColourToString[game.GetWinner()] << std::endl;
+    game.RenderBoard();
 }
 
