@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\GameInputTests">
+      <UniqueIdentifier>{72a37224-037a-4ec0-8825-d0dadf726e5d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SuperTiktakToe.cpp">
@@ -29,5 +32,16 @@
     <ClInclude Include="PlayerInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="XWinsGameInput.txt">
+      <Filter>Resource Files\GameInputTests</Filter>
+    </Text>
+    <Text Include="DrawGameInput.txt">
+      <Filter>Resource Files\GameInputTests</Filter>
+    </Text>
+    <Text Include="OWinsGameInput.txt">
+      <Filter>Resource Files\GameInputTests</Filter>
+    </Text>
   </ItemGroup>
 </Project>
