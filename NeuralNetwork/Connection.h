@@ -5,9 +5,11 @@
 
 class Connection
 {
+public:
 	std::shared_ptr<Layer> previousLayer;
+
 	std::vector<double> weights;
 
-	std::shared_ptr<Neuron> neuron;
+	std::shared_ptr<Layer> nextLayer;
 };
 
