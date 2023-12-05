@@ -25,6 +25,9 @@ class Network
 		}
 	}
 
+	/**
+	 * \brief This will reset the weights to 0
+	 */
 	void GenerateConnections()
 	{
 		int numLayers = layers.size();
@@ -33,7 +36,7 @@ class Network
 			auto currentLayer = layers[i];
 
 			auto connection = std::make_shared<Connection>();
-			connection->previousLayer = currentLayer;
+			connection->thisLayer = currentLayer;
 
 			if (i < numLayers - 1)
 			{
@@ -41,8 +44,50 @@ class Network
 			}
 
 			int layerSize = currentLayer->GetSize();
-			connection->weights = new std::vector<double>(layerSize, 0);
+			connection->neuronConnections = std::vector<std::shared_ptr<Connection::NeuronConnection>>();
+
+			for (int j = 0; j<layerSize; j++)
+			{
+				std::shared_ptr<Connection::NeuronConnection> neuronConnection;
+				neuronConnection->weights = std::vector<double>(layerSize, 0);
+				neuronConnection->neuron = currentLayer->GetNeuron(j);
+				connection->neuronConnections.push_back(neuronConnection);
+			}
+
+			connections.push_back(connection);
 		}
 	}
+
+	void UpdateWeights(std::vector<std::vector<std::vector<double>>> &newWeights)
+	{
+		int numLayers = layers.size();
+		for (int i = 0; i < numLayers; i++)
+		{
+			auto currentLayer = layers[i];
+			auto neuronConnection = connections[i];
+			int connectionSize = neuronConnection->neuronConnections.size();
+			for (int j = 0; j < connectionSize; j++)
+			{
+				int weightSize = neuronConnection->neuronConnections[j]->weights.size();
+				for (int k = 0; k < weightSize; k++)
+				{
+					neuronConnection->neuronConnections[j]->weights[k] = newWeights[i][j][k];
+				}
+			}
+		}
+	}
+
+	std::vector<double> CalculateOutput(std::vector<double> input)
+	{
+		int numLayers = connections.size();
+		for (int i = 0; i < numLayers; i++)
+		{
+			input = this->connections[i]->CalculateOutputLayer(input);
+		}
+
+		return input;
+	}
+
+
 };
 

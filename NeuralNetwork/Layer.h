@@ -18,5 +18,10 @@ public:
 	}
 
 	int GetSize() { return neurons.size(); }
+
+	std::shared_ptr<Neuron> GetNeuron(int pos)
+	{
+		return neurons[pos];
+	}
 };
 
