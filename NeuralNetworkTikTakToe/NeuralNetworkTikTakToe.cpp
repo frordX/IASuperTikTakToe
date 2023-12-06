@@ -1,7 +1,7 @@
 // SuperTiktakToe.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include "Game.h"
+#include "../SuperTiktakToe/Game.h"
 
 int main()
 {
@@ -12,7 +12,6 @@ int main()
         game.ProcessTurn();
     }
 
-    std::cout << "Fininished Game. Winner: "<< ColourToString[game.GetWinner()] << std::endl;
+    std::cout << "Fininished Game. Winner: " << ColourToString[game.GetWinner()] << std::endl;
     game.RenderBoard();
 }
-

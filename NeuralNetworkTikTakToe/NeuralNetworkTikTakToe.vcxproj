@@ -18,11 +18,14 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="NeuralNetworkTikTakToe.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{e90675b1-2e4c-4293-be44-2f318da64344}</ProjectGuid>
-    <RootNamespace>SuperTiktakToe</RootNamespace>
+    <ProjectGuid>{5fe90ae3-71e4-4a6e-9063-e4b5e49b5203}</ProjectGuid>
+    <RootNamespace>NeuralNetworkTikTakToe</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -126,20 +129,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="SuperTikTakToe.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Board.h" />
-    <ClInclude Include="Enums.h" />
-    <ClInclude Include="PlayerInput.h" />
-    <ClInclude Include="Game.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="DrawGameInput.txt" />
-    <Text Include="OWinsGameInput.txt" />
-    <Text Include="XWinsGameInput.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
