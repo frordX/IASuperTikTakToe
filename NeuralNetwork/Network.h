@@ -8,6 +8,7 @@ class Network
 	std::vector<std::shared_ptr<Layer>> layers;
 	std::vector<std::shared_ptr<Connection>> connections;
 
+public:
 	void GenerateLayers(int numLayers, int layerSize)
 	{
 		if (numLayers < 3) throw;
@@ -87,7 +88,5 @@ class Network
 
 		return input;
 	}
-
-
 };
 
