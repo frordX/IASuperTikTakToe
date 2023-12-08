@@ -60,7 +60,7 @@ public:
 		return false;
 	}
 
-	char** GetCharsToRender()
+	char** GetBoardData()
 	{
 		char** toReturn = 0;
 		toReturn = new char* [3];

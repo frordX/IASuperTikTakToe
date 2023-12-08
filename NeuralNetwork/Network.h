@@ -49,8 +49,8 @@ public:
 
 			for (int j = 0; j<layerSize; j++)
 			{
-				std::shared_ptr<Connection::NeuronConnection> neuronConnection;
-				neuronConnection->weights = std::vector<double>(layerSize, 0);
+				std::shared_ptr<Connection::NeuronConnection> neuronConnection = std::make_shared<Connection::NeuronConnection>();
+				neuronConnection->weights = std::vector<double>(layerSize, 0.0);
 				neuronConnection->neuron = currentLayer->GetNeuron(j);
 				connection->neuronConnections.push_back(neuronConnection);
 			}

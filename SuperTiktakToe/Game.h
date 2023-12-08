@@ -38,7 +38,7 @@ public:
     // Todo: improve for nine boards
     void RenderBoard()
     {
-        auto chars = board.GetCharsToRender();
+        auto chars = board.GetBoardData();
 
         std::cout << "  ";
         for (int j = 0; j < 3; j++)
@@ -85,5 +85,10 @@ public:
     bool GetFinished()
     {
         return GetWinner() != Blank || board.IsFull();
+    }
+
+    char** GetBoardData()
+    {
+return board.GetBoardData();
     }
 };

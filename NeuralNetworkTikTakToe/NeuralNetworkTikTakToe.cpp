@@ -1,6 +1,7 @@
 // SuperTiktakToe.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
+#include "Encoder.h"
 #include "../SuperTiktakToe/Game.h"
 #include "../NeuralNetwork/Network.h"
 
@@ -24,16 +25,19 @@ int main()
     Game game;
     while (!game.GetFinished())
     {
-        // TODO: Convert game board into 9 inputs game.boa
+        std::vector<double> inputData = Encoder::encode(game.GetBoardData(), 3);
+        std::vector<double> outputData;
         if (isPlayer2turn)
         {
-	        network2.CalculateOutput()
+            outputData = network2.CalculateOutput(inputData);
         }
         else
         {
-            network1.CalculateOutput()
+            outputData = network1.CalculateOutput(inputData);
         }
-        game.ProcessTurn();
+
+        // TODO: decode and input to game
+        // TODO: put all this inside a do while(turn is not valid)
     }
 
     std::cout << "Fininished Game. Winner: " << ColourToString[game.GetWinner()] << std::endl;
