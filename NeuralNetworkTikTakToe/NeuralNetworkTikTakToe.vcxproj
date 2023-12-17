@@ -22,7 +22,7 @@
     <ClCompile Include="NeuralNetworkTikTakToe.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Encoder.h" />
+    <ClInclude Include="EncoderAndDecoder.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

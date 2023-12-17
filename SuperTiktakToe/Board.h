@@ -21,7 +21,7 @@ public:
 			if (counterX == 0 || counterY == 0) return true;
 
 			if (values[i][i] == p) counterDig1--;
-			if (values[2 - i][2 - i] == p) counterDig2--;
+			if (values[2 - i][i] == p) counterDig2--;
 		}
 
 		if (counterDig1 == 0 || counterDig2 == 0) return true;

@@ -131,6 +131,7 @@
     <ClInclude Include="Layer.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="Neuron.h" />
+    <ClInclude Include="PersistNetwork.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Network.cpp" />

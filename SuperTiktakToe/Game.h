@@ -23,16 +23,6 @@ class Game
         }
     }
 
-    void ProcessTurnForPlayer(Colour player, PlayerInputValue input)
-    {
-        std::cout << "Its " << ColourToString[player] << "'s turn" << std::endl;
-        std::cout << "Select an empty square: " << std::endl;
-
-        RenderBoard();
-
-        if (!board.FillSquare(input.column, input.row, player)) throw;
-    }
-
 public:
 
     // Todo: improve for nine boards
@@ -89,6 +79,13 @@ public:
 
     char** GetBoardData()
     {
-return board.GetBoardData();
+		return board.GetBoardData();
+    }
+
+    bool ProcessTurnForPlayer(Colour player, PlayerInputValue input)
+    {
+        std::cout << "Its " << ColourToString[player] << "'s turn" << std::endl;
+
+        return board.FillSquare(input.column, input.row, player);
     }
 };
