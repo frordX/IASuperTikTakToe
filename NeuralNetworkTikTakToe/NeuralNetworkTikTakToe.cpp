@@ -4,6 +4,7 @@
 #include "EncoderAndDecoder.h"
 #include "../SuperTiktakToe/Game.h"
 #include "../NeuralNetwork/Network.h"
+#include "../NeuralNetwork/Distributor.h"
 
 
 int main()
@@ -14,12 +15,14 @@ int main()
     Network network1;
     network1.GenerateLayers(9, 10);
     network1.GenerateConnections();
+    auto megaWeightsVector = std::vector<std::vector<std::vector<double>>>(9, std::vector<std::vector<double>>(10, std::vector<double>(10, 1.0)));
+    network1.UpdateWeights(megaWeightsVector);
 
     Network network2;
     network2.GenerateLayers(9, 10);
     network2.GenerateConnections();
-    auto megaWeightsVector = std::vector<std::vector<std::vector<double>>>(9, std::vector<std::vector<double>>(10, std::vector<double>(10, 1.0)));
-    network2.UpdateWeights(megaWeightsVector);
+    auto megaWeightsVector2 = Distributor::distribute(megaWeightsVector);
+    network2.UpdateWeights(megaWeightsVector2);
 
     bool isPlayer2turn = false;
     Game game;

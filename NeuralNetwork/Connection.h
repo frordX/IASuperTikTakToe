@@ -2,6 +2,7 @@
 #include <memory>
 
 #include "Layer.h"
+#include "ActivationFunctions.h"
 
 class Connection
 {
@@ -38,7 +39,7 @@ public:
 				sum += currentNeuron->weights[j] * input[j];
 			}
 
-			output[i] = sum;
+			output[i] = ActivationFunctions::sigmoid(sum);
 		}
 
 		return output;
