@@ -29,6 +29,7 @@ public:
 	{
 		int position = std::distance(val.begin(), max_element(val.begin(), val.end()));
 		position += numTries;
+		if (numTries > 0) position = position % (boardSize * boardSize);
 		PlayerInputValue result(position / boardSize, position % boardSize);
 		return result;
 	}

@@ -39,6 +39,9 @@
     <ClInclude Include="Distributor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Persistence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Network.cpp">
