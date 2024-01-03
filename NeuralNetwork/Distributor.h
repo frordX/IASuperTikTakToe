@@ -5,7 +5,7 @@
 
 namespace Distributor
 {
-	std::vector<std::vector<std::vector<double>>> distribute(std::vector<std::vector<std::vector<double>>>& weights)
+	std::vector<std::vector<std::vector<double>>> distribute(std::vector<std::vector<std::vector<double>>>& weights, double sd = 1.0)
 	{
 		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 		std::default_random_engine generator(seed);
@@ -24,7 +24,7 @@ namespace Distributor
 			{
 				for (int k = 0; k < kSize; k++)
 				{
-					std::normal_distribution<double> distribution(weights[i][j][k], 15);
+					std::normal_distribution<double> distribution(weights[i][j][k], sd);
 					weightsToReturn[i][j][k] = distribution(generator);
 				}
 			}
