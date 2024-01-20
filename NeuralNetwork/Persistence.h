@@ -14,11 +14,14 @@ class Persistence
         free(documentsEnv);
         std::string subfolder = "NJNeuralNetworkPersistence";
         auto fullPath = (std::filesystem::path(documentsPath) / subfolder).string();
+        auto finalPath = (std::filesystem::path(fullPath) / filename).string();
+
         // Create the subfolder if it doesn't exist
-        if (!std::filesystem::exists(fullPath)) {
-            std::filesystem::create_directory(fullPath);
+        auto folderPath = finalPath.substr(0, finalPath.find_last_of("\\/"));
+        if (!std::filesystem::exists(folderPath)) {
+            std::filesystem::create_directory(folderPath);
         }
-        return fullPath + "/data.bin";
+        return finalPath;
     }
 public:
     // Function to save the vector to a file

@@ -6,105 +6,125 @@
 #include "../NeuralNetwork/Network.h"
 #include "../NeuralNetwork/Distributor.h"
 #include "../NeuralNetwork/Persistence.h"
+#include "../Utils/VectorUtils.h"
+#include "ConfigConstants.h"
+#include "Match.h"
 
-const std::string filepath = "TikTakToeAI/data.bin";
-const int boardSize = 3;
-const int boardSizeSqare = boardSize*boardSize;
+typedef std::vector<std::vector<std::vector<double>>> network;
+const int leagueSize = 10;
+const int leagueSizeHalf = leagueSize / 2;
 
-Colour playGame(std::vector<std::vector<std::vector<double>>> weightsX, std::vector<std::vector<std::vector<double>>> weightsO)
+
+/// <summary>
+/// this method will randomly distribute the weights of each network of the first half of the league and assign the new network to the same position + half the leagues' size + 1
+/// The network in the first position will be distributed two times and the netowrk in the middle-1 position won't be distributed at all
+/// </summary>
+/// <param name="league"></param>
+/// <param name="distributionPower"></param>
+void distributeTopHalf(std::vector<network>& league, int distributionPower)
 {
-    // TODO: Network 1 and two should be a vector or an array
-    Network network1;
-    network1.GenerateLayers(9, 10);
-    network1.GenerateConnections();
-    network1.UpdateWeights(weightsX);
+    league[leagueSizeHalf] = Distributor::distribute(league[0], 10 * sqrt(++distributionPower));
 
-    Network network2;
-    network2.GenerateLayers(9, 10);
-    network2.GenerateConnections();
-    network2.UpdateWeights(weightsO);
-
-    bool isPlayer2turn = false;
-    Game game;
-    while (!game.GetFinished())
+    for (int i = 1; i < leagueSizeHalf; i++)
     {
-        std::vector<double> outputData;
-        if (isPlayer2turn)
-        {
-            std::vector<double> inputData = Encoder::encode(game.GetBoardData(), boardSize, 0);
-            outputData = network2.CalculateOutput(inputData);
-        }
-        else
-        {
-            std::vector<double> inputData = Encoder::encode(game.GetBoardData(), boardSize, 1);
-            outputData = network1.CalculateOutput(inputData);
-        }
+        auto contestantWeightsVector = Distributor::distribute(league[i - 1], 10 * sqrt(++distributionPower));
 
-        // decode and input to game
-        int numTries = 0;
-        auto output = Decoder::decode(outputData, boardSize, numTries);
-        while (!game.ProcessTurnForPlayer(isPlayer2turn ? Colour::O : Colour::X, output))
-        {
-            output = Decoder::decode(outputData, boardSize, ++numTries);
-
-            if (numTries > 9)
-            {
-                game.RenderBoard();
-                output = Decoder::decode(outputData, boardSize, ++numTries);
-                throw;
-            }
-        }
-
-        isPlayer2turn = !isPlayer2turn;
-        game.RenderBoard();
+        league[i + leagueSizeHalf] = contestantWeightsVector;
     }
+}
 
-    auto winner = game.GetWinner();
-    std::cout << "Fininished Game. Winner: " << ColourToString[winner] << std::endl;
-    game.RenderBoard();
+std::vector<network> retrieveOrGenerateLeague()
+{
+    std::vector<network> league = std::vector<network>(leagueSize);
 
-    return winner;
+    for (int i = 0; i < leagueSizeHalf; i++)
+    {
+        auto currentBestWeightsVector = Persistence::retrieveVectorFromFile(filepath + std::to_string(i + 1) + filepathExtension, boardSizeSqare + 1, boardSizeSqare);
+        if (currentBestWeightsVector.empty())
+        {
+            currentBestWeightsVector = std::vector<std::vector<std::vector<double>>>(boardSizeSqare, std::vector<std::vector<double>>(boardSizeSqare + 1, std::vector<double>(boardSizeSqare + 1, 1.0)));
+            auto contestantWeightsVector = Distributor::distribute(currentBestWeightsVector, 10);
+        }
+
+        league[i] = currentBestWeightsVector;
+    }
+    
+    distributeTopHalf(league, 0);
+
+    return league;
 }
 
 /// <summary>
-/// Plays two games, one with the neural networks on each colour
+/// Returns: a vector of ints, the same size as the input vector that contains in each position 'i' the amount of times that a network in position 'i'
+/// of the input vector has won
 /// </summary>
-/// <param name="weightsKing"></param>
-/// <param name="weightsContestant"></param>
-/// <returns>Whether the contestant neural network has won both games</returns>
-bool playRound(std::vector<std::vector<std::vector<double>>> weightsKing, std::vector<std::vector<std::vector<double>>> weightsContestant)
+std::vector<int> playLegaue(std::vector<network>& league)
 {
-    std::cout << "Starting game 1" << "\n";
-    auto winnerGame1 = playGame(weightsKing, weightsContestant);
-    std::cout << "Starting game 2" << "\n";
-    auto winnerGame2 = playGame(weightsContestant, weightsKing);
-    std::cout << "Winner game 1" << winnerGame1 << "\nWinner game 2: " << winnerGame2 << "\n";
-    return winnerGame1 == Colour::O && winnerGame2 == Colour::X;
+    std::vector<int> resultsVector = std::vector<int>(league.size(), 0);
+    for (int i = 0; i < leagueSize; i++)
+    {
+        for (int j = 0; j < leagueSize; j++)
+        {
+            int winner = Match::playGame(league[i], league[j]);
+            if (winner == Colour::X) resultsVector[i] += 3;
+            else if (winner == Colour::O) resultsVector[j] += 3;
+            else
+            {
+                resultsVector[i]++;
+                resultsVector[j]++;
+            }
+        }
+    }
+
+    return resultsVector;
+}
+
+/// <summary>
+/// Saves and orders the networks. It only saves an n amount, being n the size of positionsVector. 
+/// It saves the networks in the positions determined by this vector
+/// </summary>
+/// <param name="positionsVector"></param>
+/// <param name="networks"></param>
+/// <returns></returns>
+std::vector<network> saveAndReturn5BestNetworks(std::vector<int> positionsVector, std::vector<network> networks)
+{
+    std::vector<network> resultLeague = std::vector<network>(leagueSize);
+    for (int i = 0; i < positionsVector.size(); i++)
+    {
+        int position = positionsVector[i];
+        Persistence::saveVectorToFile(networks[position], filepath + std::to_string(i + 1) + filepathExtension);
+        resultLeague[i] = networks[position];
+    }
+
+    return resultLeague;
 }
 
 int main()
 {
-    auto currentBestWeightsVector = Persistence::retrieveVectorFromFile(filepath, boardSizeSqare+1, boardSizeSqare);
-    if (currentBestWeightsVector.empty())
-    {
-        currentBestWeightsVector = std::vector<std::vector<std::vector<double>>>(boardSizeSqare, std::vector<std::vector<double>>(boardSizeSqare+1, std::vector<double>(boardSizeSqare+1, 1.0)));
-    }
-
     int numiterations = 0;
-    int numIterationsSinceLastContestantWin = 0;
+    int inverseDelta = 0;
+
+    auto leagueOfNetworks = retrieveOrGenerateLeague();
     while (true)
     {
         std::cout << "Welcome to Tic tac toe! Initializing neural network on iteration:" << ++numiterations <<"\n";
 
-        auto contestantWeightsVector = Distributor::distribute(currentBestWeightsVector, 10 * sqrt(++numIterationsSinceLastContestantWin));
         
-        auto contestantWins = playRound(currentBestWeightsVector, contestantWeightsVector);
+        auto results = playLegaue(leagueOfNetworks);
 
-        if (contestantWins)
+        auto fiveBestResultsPositions = Utils::getNHighestValuesIndices(results, 5);
+        leagueOfNetworks = saveAndReturn5BestNetworks(fiveBestResultsPositions, leagueOfNetworks);
+
+
+        // We check how different this round's results are from the last ones
+        int delta = 0;
+        for (int i = 0; i < fiveBestResultsPositions.size(); i++)
         {
-            currentBestWeightsVector = contestantWeightsVector;
-            Persistence::saveVectorToFile(currentBestWeightsVector, filepath);
-            numIterationsSinceLastContestantWin = 0;
+            delta += std::abs(i + 1 - fiveBestResultsPositions[i]);
         }
+
+        inverseDelta = 25 - delta;
+
+        distributeTopHalf(leagueOfNetworks, inverseDelta);
     }
 }

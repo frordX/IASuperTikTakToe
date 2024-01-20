@@ -25,7 +25,7 @@ public:
 class Decoder
 {
 public:
-	static PlayerInputValue decode(static std::vector<double> val, int boardSize, int numTries)
+	static PlayerInputValue decode(const std::vector<double> val, int boardSize, int numTries)
 	{
 		int position = std::distance(val.begin(), max_element(val.begin(), val.end()));
 		position += numTries;
