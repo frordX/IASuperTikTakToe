@@ -123,7 +123,7 @@ int main()
             delta += std::abs(i + 1 - fiveBestResultsPositions[i]);
         }
 
-        inverseDelta = 25 - delta;
+        inverseDelta = 26 - delta;
 
         distributeTopHalf(leagueOfNetworks, inverseDelta);
     }
